@@ -37,6 +37,9 @@ Get-Content .\sample4.txt | Sort-Object | Get-Unique | Set-Content .\sample4.txt
 # 行数取得
 (Get-Content '.\sample3.csv').Length
 
+# 行数範囲を指定して取得 (例: 1行目～5行目)
+Select-String ".*" .\sample.txt | Where-Object{($_.LineNumber -ge 1) -and ($_.LineNumber -le 5)}
+
 # grep (正規表現適用 & 大文字小文字を区別する)
 $pattern = "^aM.*?:"
 (Select-String $pattern .\sample3.csv -CaseSensitive -Encoding Default).Line # -> String
