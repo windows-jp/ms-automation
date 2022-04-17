@@ -11,20 +11,20 @@ $root = $namespace.Folders.Item(1) # -> Folder
 $inbox = $root.Folders('受信トレイ') # -> Folder
 
 # タイトルでフィルター
-# $regex = ".*【1日1フレーズ！生英語】.*"
-# $result = $inbox.items | Where-Object {$_.Subject -match $regex} # -> Item
+$regex = ".*【1日1フレーズ！生英語】.*"
+$result = $inbox.items | Where-Object {$_.Subject -match $regex} # -> Item
 
 # 本文でフィルター
-# $regex = ".*type IT.*"
-# $result = $inbox.items | Where-Object {$_.Body -match $regex} # -> Item
+$regex = ".*type IT.*"
+$result = $inbox.items | Where-Object {$_.Body -match $regex} # -> Item
 
 # 差出人でフィルター (宛先: To, )
 $regex = ".*@hapaeikaiwa.com"
 $result = $inbox.items | Where-Object {$_.SenderEmailAddress -match $regex} # -> Item
 
 # 宛先でフィルター
-# $regex = ".*@gmail.com"
-# $result = $inbox.items | Where-Object {$_.To -match $regex} # -> Item
+$regex = ".*@gmail.com"
+$result = $inbox.items | Where-Object {$_.To -match $regex} # -> Item
 
 # 日付でフィルター
 $from = "2021/07/19 06:26:43"
