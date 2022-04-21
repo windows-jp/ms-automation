@@ -11,10 +11,7 @@ set dns_02=""
 set /a line_number=1
 
 for /f "tokens=1-5" %%a in (!config!) do (
-    if %%a==インターフェイスの構成 (
-        set interface=%%b
-        set interface=!interface:~1,-1!
-    )
+    if %%a==インターフェイスの構成 set interface=%%b
     if %%a==IP set address=%%c
     if %%a==サブネット (
         set mask=%%e
