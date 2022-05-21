@@ -25,7 +25,7 @@ foreach ($directory in $out_dir, $temp_dir, $duplicate_dir, $converted_dir) {
     if (Test-Path $directory) {
         Remove-Item -Recurse $directory
     }
-    New-Item -Path $work_dir -Name $directory -ItemType "directory"
+    New-Item -Path $work_dir -Name $directory -ItemType "directory" | Out-Null
 }
 
 $group_identifier = Import-Csv $csv_file -Encoding default | Select-Object $send_column, $title_column -uniq
