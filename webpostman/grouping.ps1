@@ -13,8 +13,13 @@ $out_file = "out.txt"
 
 Set-Location $work_dir
 
-Remove-Item -Recurse $out_dir, $temp_dir, $duplicate_dir
-$out_dir, $temp_dir, $duplicate_dir | %{ New-Item -Path $work_dir -Name $_ -ItemType "directory" -Force }
+foreach ($directory in $out_dir, $temp_dir, $duplicate_dir) {
+    if (Test-Path $directory) {
+        Remove-Item -Recurse $directory
+    }
+    New-Item -Path $work_dir -Name $directory -ItemType "directory"
+}
+
 $group_identifier = Import-Csv $csv_file -Encoding default | Select-Object $send_column, $title_column -uniq
 
 foreach ($gi in $group_identifier) {Import-Csv $csv_file -Encoding default | Where-Object {($_.$send_column -eq $gi.$send_column) -and ($_.$title_column -eq $gi.$title_column)} | Select-Object $sender_id, $recipient_email | Export-Csv -LiteralPath ($temp_dir + '\' +  $gi.$send_column + '_' + $gi.$title_column + '.csv').replace(' ', '_').replace('/','').replace(':','') -NoTypeInformation -Encoding default}
