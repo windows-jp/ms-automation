@@ -14,9 +14,9 @@ $out_file = "out.txt"
 Set-Location $work_dir
 
 $out_dir, $temp_dir, $duplicate_dir | %{ New-Item -Path $work_dir -Name $_ -ItemType "directory" -Force }
-$group_identifier = Import-Csv $csv_file | Select-Object $send_column, $title_column -uniq
+$group_identifier = Import-Csv $csv_file -Encoding default | Select-Object $send_column, $title_column -uniq
 
-foreach ($gi in $group_identifier) {Import-Csv $csv_file | Where-Object {($_.$send_column -eq $gi.$send_column) -and ($_.$title_column -eq $gi.$title_column)} | Select-Object $sender_id, $recipient_email | Export-Csv ($temp_dir + '\' +  $gi.$send_column + '_' + $gi.$title_column + '.csv').replace(' ', '_').replace('/','').replace(':','') -NoTypeInformation -Encoding default}
+foreach ($gi in $group_identifier) {Import-Csv $csv_file -Encoding default | Where-Object {($_.$send_column -eq $gi.$send_column) -and ($_.$title_column -eq $gi.$title_column)} | Select-Object $sender_id, $recipient_email | Export-Csv ($temp_dir + '\' +  $gi.$send_column + '_' + $gi.$title_column + '.csv').replace(' ', '_').replace('/','').replace(':','') -NoTypeInformation -Encoding default}
 
 foreach ($temp_csv in (Get-ChildItem $temp_dir)) { `
     if (Test-Path $temp_csv.FullName) { `
