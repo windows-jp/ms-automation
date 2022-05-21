@@ -16,12 +16,15 @@ $out_dir = "out"
 $temp_dir = "temp"
 $duplicate_dir = "duplicate"
 $converted_dir = "converted"
+$log_dir = "log"
+
 $out_file = $work_dir + $out_dir + '/' + "out.txt"
+$log_file = $log_dir + '/' + "log.txt"
 
 
 Set-Location $work_dir
 
-foreach ($directory in $out_dir, $temp_dir, $duplicate_dir, $converted_dir) {
+foreach ($directory in $out_dir, $temp_dir, $duplicate_dir, $converted_dir, $log_dir) {
     if (Test-Path $directory) {
         Remove-Item -Recurse $directory
     }
@@ -53,6 +56,7 @@ foreach ($temp_txt in (Get-ChildItem $converted_dir)) {
                 $difference_is_detected = Compare-Object (Get-Content -LiteralPath $temp_txt.FullName) (Get-Content -LiteralPath $compared_txt.FullName);
                 if (-Not $difference_is_detected) {
                     Move-Item ($compared_txt.FullName) -Destination ($duplicate_dir)
+                    Write-Output ((Get-Date -UFormat "%Y-%m-%d %H:%M:%S") + ' [Duplicated] ' + $temp_txt.Name  + ' <=> ' + $compared_txt.Name) | Out-File $log_file
                 }
         }
     }
