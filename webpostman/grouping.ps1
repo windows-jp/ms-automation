@@ -1,10 +1,10 @@
-$work_dir = "C:\Users\opkd0\é–‹ç™º\ms-automation\webpostman\"
+$work_dir = "C:\Users\opkd0\ŠJ”­\ms-automation\webpostman\"
 $csv_file = "sample.csv"
 
-$send_column = "é€ä¿¡æ™‚åˆ»"
-$title_column = "ä»¶å"
-$sender_id = "é€ä¿¡è€…ID" 
-$recipient_email = "å—ä¿¡ãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹"
+$send_column = "‘—M"
+$title_column = "Œ–¼"
+$sender_id = "‘—MÒID" 
+$recipient_email = "óMƒ[ƒ‹ƒAƒhƒŒƒX"
 
 $out_dir = "out"
 $temp_dir = "temp"
