@@ -13,6 +13,7 @@ $out_file = "out.txt"
 
 Set-Location $work_dir
 
+Remove-Item -Recurse $out_dir, $temp_dir, $duplicate_dir
 $out_dir, $temp_dir, $duplicate_dir | %{ New-Item -Path $work_dir -Name $_ -ItemType "directory" -Force }
 $group_identifier = Import-Csv $csv_file -Encoding default | Select-Object $send_column, $title_column -uniq
 
