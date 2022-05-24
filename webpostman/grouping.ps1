@@ -1,12 +1,12 @@
 $work_dir = "C:\Users\opkd0\開発\ms-automation\webpostman\"
-$csv_file = "sample.csv"
+$csv_file = "JOIN.dat"
 $email_list = "email.csv"
 
 # csv_file's columns
-$send_column = "送信時刻"
+$send_column = "送信日時"
 $title_column = "件名"
-$sender_id = "送信者ID" 
-$recipient_email = "受信メールアドレス"
+$sender_id = "送信者アカウントID" 
+$recipient_email = "受信者メールアドレ"
 
 #email_list's columns
 $id = "アカウントID"
