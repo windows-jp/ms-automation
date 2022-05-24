@@ -1,12 +1,12 @@
 $work_dir = "C:\Users\opkd0\開発\ms-automation\webpostman\"
-$csv_file = "sample.csv"
+$csv_file = "JOIN.dat"
 $email_list = "email.csv"
 
 # csv_file's columns
-$send_column = "送信時刻"
+$send_column = "送信日時"
 $title_column = "件名"
-$sender_id = "送信者ID" 
-$recipient_email = "受信メールアドレス"
+$sender_id = "送信者アカウントID" 
+$recipient_email = "受信者メールアドレス"
 
 #email_list's columns
 $id = "アカウントID"
@@ -33,7 +33,7 @@ foreach ($directory in $out_dir, $temp_dir, $duplicate_dir, $converted_dir, $log
 
 $group_identifier = Import-Csv $csv_file -Encoding default | Select-Object $send_column, $title_column -uniq
 
-foreach ($gi in $group_identifier) {Import-Csv $csv_file -Encoding default | Where-Object {($_.$send_column -eq $gi.$send_column) -and ($_.$title_column -eq $gi.$title_column)} | Select-Object $sender_id, $recipient_email | Export-Csv -LiteralPath ($temp_dir + '\' +  $gi.$send_column + '_' + $gi.$title_column + '.csv').replace(' ', '_').replace('/','').replace(':','') -NoTypeInformation -Encoding default}
+foreach ($gi in $group_identifier) {Import-Csv $csv_file -Encoding default | Where-Object {($_.$send_column -eq $gi.$send_column) -and ($_.$title_column -eq $gi.$title_column)} | Select-Object $sender_id, $recipient_email | Export-Csv -LiteralPath ($temp_dir + '\' +  $gi.$send_column.Replace('-','').Replace(':','').Replace(' ','') + '_' + $gi.$title_column.Replace('/','').Replace(':','').Replace('?','') + '.csv') -NoTypeInformation -Encoding default}
 
 foreach ($temp_csv in (Get-ChildItem $temp_dir)) {
     
