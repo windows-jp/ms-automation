@@ -6,7 +6,7 @@ $email_list = "email.csv"
 $send_column = "送信日時"
 $title_column = "件名"
 $sender_id = "送信者アカウントID" 
-$recipient_email = "受信者メールアドレ"
+$recipient_email = "受信者メールアドレス"
 
 #email_list's columns
 $id = "アカウントID"
