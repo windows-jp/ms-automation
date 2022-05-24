@@ -43,7 +43,8 @@ foreach ($temp_csv in (Get-ChildItem $temp_dir)) {
         if ($data.$sender_id -match '.*/.*') {
             $webpostman_id, $webpostman_group = $data.$sender_id -split '/'
             $data.$sender_id = (Import-Csv $email_list -Encoding default | Where-Object {$_.$id -eq $webpostman_id}).$email
-        } elseif ($data.$recipient_email -match '.*/.*') {
+        }
+        if ($data.$recipient_email -match '.*/.*') {
             $webpostman_id, $webpostman_group = $data.$recipient_email -split '/'
             $data.$recipient_email = (Import-Csv $email_list -Encoding default | Where-Object {$_.$id -eq $webpostman_id}).$email
         }
