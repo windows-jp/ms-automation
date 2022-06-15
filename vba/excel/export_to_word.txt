@@ -1,0 +1,65 @@
+Option Explicit
+
+Function SelectProperties(ByVal Target As Object)
+    Dim Name As String
+    Dim Address As String
+    Dim Status As String
+    Dim Properties(1) As String
+ 
+    Name = Cells(Target.Row, 1)
+    Address = Cells(Target.Row, 6)
+    Status = Cells(Target.Row, 3)
+    
+    Properties(0) = Name
+    Properties(1) = Address
+     
+    SelectProperties = Properties()
+    
+End Function
+
+Sub ReplaceText(ByVal BeforeText As String, ByVal AfterText As String)
+    With Word.Selection.Find
+        .ClearFormatting
+        .Replacement.ClearFormatting
+        .Text = BeforeText
+        .Replacement.Text = AfterText
+        .Execute Replace:=wdReplaceAll
+    End With
+End Sub
+
+Sub ExportToWord(ByVal Target As Object)
+    Dim Properties() As String
+    
+    'Excelからプロパティ取得'
+    Properties() = SelectProperties(Target)
+    
+    'テンプレートWordファイルを開く'
+    Dim WordApp As Word.Application
+    Set WordApp = New Word.Application
+    WordApp.Visible = True
+    
+    Dim TemplateDocPath As String
+    TemplateDocPath = "C:\Users\opkd0\Desktop\sample\template.docx"
+    
+    Dim TemplateDoc As Word.Document
+    Set TemplateDoc = WordApp.Documents.Open(TemplateDocPath)
+
+    Call ReplaceText("#NAME#", Properties(0))
+    Call ReplaceText("#ADDRESS#", Properties(1))
+
+    
+    '名前を付けて保存'
+    Dim DestDirName As String
+    Dim DestFileName As String
+    DestDirName = "C:\Users\opkd0\Desktop\sample\"
+    DestFileName = Properties(0) & ".docx"
+    
+    TemplateDoc.SaveAs2 DestDirName & DestFileName
+
+End Sub
+
+Private Sub Worksheet_SelectionChange(ByVal Target As Range)
+    If Target.Column = 7 Then
+        Call ExportToWord(Target)
+    End If
+End Sub
