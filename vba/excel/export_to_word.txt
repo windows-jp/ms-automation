@@ -100,6 +100,8 @@ Sub ExportToWord(ByVal Target As Object)
 
     Set WordApp = Nothing
     Set NewDoc = Nothing
+    
+    MsgBox "利用書を生成しました。" & vbCrLf & NewDocPath, vbInformation
 
 End Sub
 
