@@ -61,8 +61,8 @@ Function CopyDocFromTemplate(ByRef Properties() As Variant)
 
 End Function
 
-Sub ReplaceText(ByVal BeforeText As String, ByVal AfterText As String)
-    With Word.Selection.Find
+Sub ReplaceText(ByRef WordApp As Word.Application, ByVal BeforeText As String, ByVal AfterText As String)
+    With WordApp.Selection.Find
         .ClearFormatting
         .Replacement.ClearFormatting
         .Text = BeforeText
@@ -89,10 +89,10 @@ Sub ExportToWord(ByVal Target As Object)
     WordApp.Visible = False
 
     'Wordファイル内のテキスト置換'
-    Call ReplaceText("#EMAIL_ADDRESS#", Properties(0))
-    Call ReplaceText("#ID#", Properties(1))
-    Call ReplaceText("#PASSWORD#", Properties(2))
-    Call ReplaceText("#DATE#", Properties(3))
+    Call ReplaceText(WordApp, "#EMAIL_ADDRESS#", Properties(0))
+    Call ReplaceText(WordApp, "#ID#", Properties(1))
+    Call ReplaceText(WordApp, "#PASSWORD#", Properties(2))
+    Call ReplaceText(WordApp, "#DATE#", Properties(3))
     
     NewDoc.Save
     NewDoc.Close
