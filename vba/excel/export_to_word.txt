@@ -1,20 +1,64 @@
 Option Explicit
 
-Function SelectProperties(ByVal Target As Object)
-    Dim Name As String
-    Dim Address As String
-    Dim Status As String
-    Dim Properties(1) As String
- 
-    Name = Cells(Target.Row, 1)
-    Address = Cells(Target.Row, 6)
-    Status = Cells(Target.Row, 3)
+Function ExtructEmailUsername(ByVal EmailAddress As String)
+    Dim EmailUsername As String
+    Dim Regex As Object
+    Dim Match As Variant
     
-    Properties(0) = Name
-    Properties(1) = Address
-     
-    SelectProperties = Properties()
+    Set Regex = CreateObject("VBScript.RegExp")
+    Regex.Pattern = "(.*)@.*"
+    Regex.Global = True
     
+    Set Match = Regex.Execute(EmailAddress)
+    EmailUsername = Match(0).SubMatches(0)
+    
+    ExtructEmailUsername = EmailUsername
+
+End Function
+
+Function GetProperties(ByVal Target As Object)
+    Dim EmailAddress As String
+    Dim Id As String
+    Dim Password As String
+    Dim DateStr As String
+    Dim EmailUsername As String
+    Dim Properties() As Variant
+
+    'Excelからデータ取得
+    EmailAddress = Cells(Target.Row, 3)
+    Id = Cells(Target.Row, 7)
+    Password = Cells(Target.Row, 8)
+
+    '追加のデータを生成 & 加工
+    DateStr = Format(Now, "yyyy/mm/dd")
+    EmailUsername = ExtructEmailUsername(EmailAddress)
+    
+    Properties = Array(EmailAddress, Id, Password, DateStr, EmailUsername)
+
+    GetProperties = Properties()
+
+End Function
+
+Function CopyDocFromTemplate(ByRef Properties() As Variant)
+    Dim TemplateDir As String
+    Dim TemplateFilename As String
+    Dim TemplateFilePath As String
+    Dim DestDir As String
+    Dim DestFilename As String
+    Dim DestFilePath As String
+    
+    TemplateDir = "C:\Users\opkd0\Desktop\crypt\templates\"
+    TemplateFilename = "クリプト便アカウント利用書_(#EMAIL_USERNAME#).docx"
+    TemplateFilePath = TemplateDir & TemplateFilename
+    
+    DestDir = "C:\Users\opkd0\Desktop\crypt\"
+    DestFilename = Replace(TemplateFilename, "#EMAIL_USERNAME#", Properties(4))
+    DestFilePath = DestDir & DestFilename
+    
+    FileCopy TemplateFilePath, DestFilePath
+    
+    CopyDocFromTemplate = DestFilePath
+
 End Function
 
 Sub ReplaceText(ByVal BeforeText As String, ByVal AfterText As String)
@@ -28,38 +72,41 @@ Sub ReplaceText(ByVal BeforeText As String, ByVal AfterText As String)
 End Sub
 
 Sub ExportToWord(ByVal Target As Object)
-    Dim Properties() As String
-    
+    Dim Properties() As Variant
+    Dim NewDocPath As String
+
     'Excelからプロパティ取得'
-    Properties() = SelectProperties(Target)
+    Properties() = GetProperties(Target)
+    NewDocPath = CopyDocFromTemplate(Properties) 'テンプレートからコピーされたWordファイルのフルパスが返される
     
-    'テンプレートWordファイルを開く'
+    'Wordファイルを開く'
     Dim WordApp As Word.Application
+    Dim NewDoc As Word.Document
+    
     Set WordApp = New Word.Application
-    WordApp.Visible = True
+    Set NewDoc = WordApp.Documents.Open(NewDocPath)
     
-    Dim TemplateDocPath As String
-    TemplateDocPath = "C:\Users\opkd0\Desktop\sample\template.docx"
-    
-    Dim TemplateDoc As Word.Document
-    Set TemplateDoc = WordApp.Documents.Open(TemplateDocPath)
+    WordApp.Visible = False
 
-    Call ReplaceText("#NAME#", Properties(0))
-    Call ReplaceText("#ADDRESS#", Properties(1))
+    'Wordファイル内のテキスト置換'
+    Call ReplaceText("#EMAIL_ADDRESS#", Properties(0))
+    Call ReplaceText("#ID#", Properties(1))
+    Call ReplaceText("#PASSWORD#", Properties(2))
+    Call ReplaceText("#DATE#", Properties(3))
+    
+    NewDoc.Save
+    NewDoc.Close
+        WordApp.Quit
 
-    
-    '名前を付けて保存'
-    Dim DestDirName As String
-    Dim DestFileName As String
-    DestDirName = "C:\Users\opkd0\Desktop\sample\"
-    DestFileName = Properties(0) & ".docx"
-    
-    TemplateDoc.SaveAs2 DestDirName & DestFileName
+    Set WordApp = Nothing
+    Set NewDoc = Nothing
 
 End Sub
 
-Private Sub Worksheet_SelectionChange(ByVal Target As Range)
-    If Target.Column = 7 Then
-        Call ExportToWord(Target)
+Private Sub Worksheet_BeforeDoubleClick(ByVal Target As Range, Cancel As Boolean)
+    If Target.Column = 17 Then
+        If Target.Row >= 4 Then
+            Call ExportToWord(Target)
+        End If
     End If
 End Sub
