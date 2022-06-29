@@ -28,6 +28,22 @@ Function GetProperties(ByVal Target As Object)
     EmailAddress = Cells(Target.Row, 3)
     Id = Cells(Target.Row, 7)
     Password = Cells(Target.Row, 8)
+    
+    'セルが空の場合はマクロを終了'
+    If EmailAddress = "" Then
+        MsgBox "メールアドレスが空です"
+        End
+    End If
+    
+    If Id = "" Then
+        MsgBox "ユーザーIDが空です"
+        End
+    End If
+    
+    If Password = "" Then
+        MsgBox "パスワードが空です"
+        End
+    End If
 
     '追加のデータを生成 & 加工
     DateStr = Format(Now, "yyyy/mm/dd")
